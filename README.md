@@ -1,1 +1,4 @@
-"# videoplayer mpv (pyside6)" 
+# videoplayer mpv (pyside6)
+
+## tareas
+ya reprocude video
