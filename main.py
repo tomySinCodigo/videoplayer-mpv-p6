@@ -31,6 +31,7 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
         #         self._position = value
         #         self.update_time_display()
 
+        self.bt_play.clicked.connect(self.playPause)
 
     def update_time_display(self):
         if not self._inmove:
@@ -59,15 +60,20 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
         self.player.volume = value
         self.lb_vol.setText(f'{value}%')
 
-
     def closeEvent(self, event):
         self.player.terminate()
         event.accept()
 
+    def _getProperty(self, prop:str) -> str|bool :
+        return self.player._get_property(prop)
     
+    def _setProperty(self, *args):
+        self.player._set_property(*args)
 
-
-            
+    def playPause(self):
+        std:bool = self._getProperty(prop='core-idle')
+        self.player.pause = not std
+           
 
 
 if __name__ == "__main__":
