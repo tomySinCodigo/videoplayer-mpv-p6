@@ -27,11 +27,13 @@ QLabel {
 QPushButton {
 	font: 700 8pt &quot;Segoe UI&quot;;
 	color: rgb(226, 226, 226);
-	
 	background-color: rgb(50, 52, 50);
 }
 QFrame #frame_video {
 	background-color: rgb(0, 0, 0);
+}
+QPushButton::Pressed{
+	background-color: rgb(10, 12, 10);
 }
 </string>
   </property>
@@ -218,6 +220,9 @@ QFrame #frame_video {
                     <height>18</height>
                    </size>
                   </property>
+                  <property name="maximum">
+                   <number>100</number>
+                  </property>
                   <property name="orientation">
                    <enum>Qt::Orientation::Horizontal</enum>
                   </property>
@@ -227,13 +232,13 @@ QFrame #frame_video {
                  <widget class="QLabel" name="lb_vol">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>20</width>
                     <height>18</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
+                    <width>20</width>
                     <height>18</height>
                    </size>
                   </property>

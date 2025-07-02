@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'skin-player.ui'
+## Form generated from reading UI file 'skin_player.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -37,11 +37,13 @@ class Ui_SkinPlayer(object):
 "QPushButton {\n"
 "	font: 700 8pt \"Segoe UI\";\n"
 "	color: rgb(226, 226, 226);\n"
-"	\n"
 "	background-color: rgb(50, 52, 50);\n"
 "}\n"
 "QFrame #frame_video {\n"
 "	background-color: rgb(0, 0, 0);\n"
+"}\n"
+"QPushButton::Pressed{\n"
+"	background-color: rgb(10, 12, 10);\n"
 "}\n"
 "")
         self.verticalLayout_2 = QVBoxLayout(SkinPlayer)
@@ -120,14 +122,15 @@ class Ui_SkinPlayer(object):
         self.sld_vol.setObjectName(u"sld_vol")
         self.sld_vol.setMinimumSize(QSize(60, 18))
         self.sld_vol.setMaximumSize(QSize(60, 18))
+        self.sld_vol.setMaximum(100)
         self.sld_vol.setOrientation(Qt.Orientation.Horizontal)
 
         self.horizontalLayout.addWidget(self.sld_vol)
 
         self.lb_vol = QLabel(self.page)
         self.lb_vol.setObjectName(u"lb_vol")
-        self.lb_vol.setMinimumSize(QSize(0, 18))
-        self.lb_vol.setMaximumSize(QSize(16777215, 18))
+        self.lb_vol.setMinimumSize(QSize(20, 18))
+        self.lb_vol.setMaximumSize(QSize(20, 18))
         self.lb_vol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout.addWidget(self.lb_vol)
