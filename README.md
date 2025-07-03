@@ -7,10 +7,6 @@ video player basico realizado con:
 
  ![](capture.png)
 
-## tareas
-ya reproduce video
-
-
 ## mejoras adicionales
 
 ```cmd
@@ -25,4 +21,4 @@ video_sync='audio'  # Sincronización menos exigente
 
 ## todo
 - [ ] soporte para linux
-- [ ] usar logging
+- [x] usar logging

@@ -2,3 +2,4 @@ otros/
 libmpv-2.dll
 __pycache__/
 *.jpg
+logs/
