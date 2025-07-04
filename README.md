@@ -20,5 +20,5 @@ video_sync='audio'  # Sincronización menos exigente
 ```
 
 ## todo
-- [ ] soporte para linux
+- [x] soporte para linux
 - [x] usar logging

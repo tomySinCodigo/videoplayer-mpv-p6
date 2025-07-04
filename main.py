@@ -1,7 +1,13 @@
-import sys, os, platform
+import sys, os, platform, locale
 import logging
 from datetime import datetime
 os.environ["PATH"] = os.path.dirname(__file__) + os.pathsep + os.environ["PATH"]
+
+# Configurar locale para mpv
+locale.setlocale(locale.LC_NUMERIC, 'C')
+# También puedes usar la variable de entorno
+os.environ['LC_NUMERIC'] = 'C'
+
 import mpv
 from PySide6.QtWidgets import (QApplication, QWidget)
 from PySide6.QtCore import Qt, QTimer, Signal
@@ -61,9 +67,10 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
         
         if platform.system() == "Linux":
             mpv_config = {
-                'wid': str(int(self.video_frame.winId())),
-                'vo': 'gpu',  # o 'xv' como fallback
-                'hwdec': 'auto-safe',  # más conservador en Linux
+                'wid': str(int(self.fm_video.winId())),
+                'vo': 'x11',  # o 'xv' como fallback
+                # 'hwdec': 'auto-safe',  # más conservador en Linux
+                'hwdec': 'no',
                 'gpu_context': 'auto',
                 'screenshot_directory': os.path.expanduser('~/Pictures'),
                 'x11_name': 'mpv-player'  # nombre para el gestor de ventanas
@@ -384,9 +391,11 @@ if __name__ == "__main__":
     app.setStyle("Windows11")
     wg = PlayerMpv()
 
-    v1 = "D:/temp-test/video.mp4"
+    # v1 = "D:/temp-test/video.mp4"
+    v1 = "/run/media/tomy/sis/temp-test/video.mp4"
     if os.path.exists(v1):
         wg.setVideo(v1)
+        # print('listo')
     else:
         print("Video file not found!")
     wg.show()
