@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, platform
 import logging
 from datetime import datetime
 os.environ["PATH"] = os.path.dirname(__file__) + os.pathsep + os.environ["PATH"]
@@ -41,29 +41,73 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
         self.logger = logging.getLogger('Player mpv')
         self.logger.info("player inicializado")
         # Configuración optimizada de MPV
-        self.player = mpv.MPV(
-            wid=0, 
-            vo='gpu',  # Usar GPU para renderizado
-            hwdec='auto',  # Decodificación por hardware automática
-            keep_open=True,
-            idle=True,
-            log_handler=self._log_handler,
-            loglevel='warn',  # Reducir logging para mejor rendimiento
+        # self.player = mpv.MPV(
+        #     wid=0, 
+        #     vo='gpu',  # Usar GPU para renderizado
+        #     hwdec='auto',  # Decodificación por hardware automática
+        #     keep_open=True,
+        #     idle=True,
+        #     log_handler=self._log_handler,
+        #     loglevel='warn',  # Reducir logging para mejor rendimiento
+        #     # Optimizaciones adicionales
+        #     cache=True,
+        #     demuxer_max_bytes='50MiB',  # Buffer más pequeño
+        #     demuxer_readahead_secs=10,  # Menor readahead
+        #     video_sync='display-resample',  # Mejor sincronización
+        #     interpolation=True,  # Interpolación de frames para mejor calidad
+        #     tscale='oversample',  # Mejor escalado temporal
+        #     framedrop='vo',  # Permitir drop de frames
+        # )
+        
+        if platform.system() == "Linux":
+            mpv_config = {
+                'wid': str(int(self.video_frame.winId())),
+                'vo': 'gpu',  # o 'xv' como fallback
+                'hwdec': 'auto-safe',  # más conservador en Linux
+                'gpu_context': 'auto',
+                'screenshot_directory': os.path.expanduser('~/Pictures'),
+                'x11_name': 'mpv-player'  # nombre para el gestor de ventanas
+            }
+        else:
+            mpv_config = {
+                'wid': str(int(self.fm_video.winId())),
+                'vo': 'gpu',  # o 'direct3d' como alternativa
+                'hwdec': 'auto',  # menos restrictivo en Windows
+                'gpu_api': 'auto',  # detectar automáticamente (D3D11, Vulkan, etc.)
+                'screenshot_directory': os.path.expanduser('~/Pictures'),
+                'ontop': False  # evitar problemas de ventana en Windows
+            }
+        common_config ={
+            'keep_open': True,
+            'idle': True,
+            'osd_level': 0,
+            'cursor_autohide': False,
+            'input_default_bindings': False,
+            'input_vo_keyboard': False,
+            'input_cursor': False,
+            'screenshot_format': 'png',
+            'screenshot_png_compression': 8,
+            'pause': True,  # comenzar pausado
+            'log_handler':self._log_handler,
+            'loglevel':'warn',  # Reducir logging para mejor rendimiento
             # Optimizaciones adicionales
-            cache=True,
-            demuxer_max_bytes='50MiB',  # Buffer más pequeño
-            demuxer_readahead_secs=10,  # Menor readahead
-            video_sync='display-resample',  # Mejor sincronización
-            interpolation=True,  # Interpolación de frames para mejor calidad
-            tscale='oversample',  # Mejor escalado temporal
-            framedrop='vo',  # Permitir drop de frames
-        )
+            'cache':True,
+            'demuxer_max_bytes':'50MiB',  # Buffer más pequeño
+            'demuxer_readahead_secs':10,  # Menor readahead
+            'video_sync':'display-resample',  # Mejor sincronización
+            'interpolation':True,  # Interpolación de frames para mejor calidad
+            'tscale':'oversample',  # Mejor escalado temporal
+            'framedrop':'vo',  # Permitir drop de frames
+        }
+
+        final_config = {**mpv_config, **common_config}
+        self.player = mpv.MPV(**final_config)
 
         self._duration = 0
         self._position = 0
         self._inmove = False
         self._is_playing = False
-        self.player.wid = int(self.fm_video.winId())
+        # self.player.wid = int(self.fm_video.winId())
         
         # Usar señales Qt para thread safety
         self.position_changed.connect(self._on_position_changed)
