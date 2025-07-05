@@ -1,17 +1,17 @@
-import sys, os, platform, locale
-import logging
-from datetime import datetime
+import os, locale
 os.environ["PATH"] = os.path.dirname(__file__) + os.pathsep + os.environ["PATH"]
-
 # Configurar locale para mpv
 locale.setlocale(locale.LC_NUMERIC, 'C')
 # También puedes usar la variable de entorno
 os.environ['LC_NUMERIC'] = 'C'
 
-import mpv
+import sys, platform
+import logging
+from datetime import datetime
 from PySide6.QtWidgets import (QApplication, QWidget)
 from PySide6.QtCore import Qt, QTimer, Signal
-from skin_player import Ui_SkinPlayer
+from player_mpv.skin_player import Ui_SkinPlayer
+import player_mpv.mpv as mpv
 
 
 def setupLogging():
@@ -46,24 +46,6 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
     def __configPlayerMpv(self):
         self.logger = logging.getLogger('Player mpv')
         self.logger.info("player inicializado")
-        # Configuración optimizada de MPV
-        # self.player = mpv.MPV(
-        #     wid=0, 
-        #     vo='gpu',  # Usar GPU para renderizado
-        #     hwdec='auto',  # Decodificación por hardware automática
-        #     keep_open=True,
-        #     idle=True,
-        #     log_handler=self._log_handler,
-        #     loglevel='warn',  # Reducir logging para mejor rendimiento
-        #     # Optimizaciones adicionales
-        #     cache=True,
-        #     demuxer_max_bytes='50MiB',  # Buffer más pequeño
-        #     demuxer_readahead_secs=10,  # Menor readahead
-        #     video_sync='display-resample',  # Mejor sincronización
-        #     interpolation=True,  # Interpolación de frames para mejor calidad
-        #     tscale='oversample',  # Mejor escalado temporal
-        #     framedrop='vo',  # Permitir drop de frames
-        # )
         
         if platform.system() == "Linux":
             mpv_config = {
@@ -194,14 +176,11 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
             self.player.volume = value
             self.lb_vol.setText(str(value))
         except Exception as e:
-            # print(f"Error setting volume: {e}")
             self.logger.error(f"Error setting volume: {e}")
 
     def update_time_display(self):
         if not self._inmove:
             self.lb_time.setText(self.format_time(self._position))
-            # print(self.format_time(self._position))
-            # print('poss::: ', self._position, type(self._position))
             self.lb_time_t.setText(self.sec_hmsz(sec=self._position))
             if self._duration:
                 res = self._duration - self._position
@@ -233,10 +212,8 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
                 self.player.loadfile(url)
                 self._start_ui_timer()
             else:
-                # print(f"Error: File not found - {url}")
                 self.logger.error(f"Error: File not found - {url}")
         except Exception as e:
-            # print(f"Error loading video: {e}")
             self.logger.error(f"Error loading video: {e}")
 
     def _start_ui_timer(self):
@@ -254,14 +231,12 @@ class PlayerMpv(QWidget, Ui_SkinPlayer):
             self.player.pause = False
             self._start_ui_timer()
         except Exception as e:
-            # print(f"Error playing: {e}")
             self.logger.error(f"Error playing: {e}")
 
     def pause(self):
         try:
             self.player.pause = True
         except Exception as e:
-            # print(f"Error pausing: {e}")
             self.logger.error(f"Error pausing: {e}")
 
     def stop(self):
@@ -391,11 +366,10 @@ if __name__ == "__main__":
     app.setStyle("Windows11")
     wg = PlayerMpv()
 
-    # v1 = "D:/temp-test/video.mp4"
-    v1 = "/run/media/tomy/sis/temp-test/video.mp4"
+    v1 = "D:/temp-test/video.mp4"
+    # v1 = "/run/media/tomy/sis/temp-test/video.mp4"
     if os.path.exists(v1):
         wg.setVideo(v1)
-        # print('listo')
     else:
         print("Video file not found!")
     wg.show()

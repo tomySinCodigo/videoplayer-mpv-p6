@@ -22,3 +22,5 @@ video_sync='audio'  # Sincronización menos exigente
 ## todo
 - [x] soporte para linux
 - [x] usar logging
+
+La ubicacion del `libmpv-2.dll` debe estar dentro de la carpeta `player_mpv`
